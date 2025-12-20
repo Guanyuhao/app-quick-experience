@@ -46,3 +46,14 @@ pnpm run deploy
     "senderEmail": "onboarding@resend.dev",
 }
 ```
+
+命令	功能	使用场景
+dev	启动 Remix 开发服务器 (Vite)，支持 HMR 热更新	日常开发 ✅
+build	构建生产版本，输出到 build/ 目录	部署前构建
+start	直接启动 Wrangler (Cloudflare Workers 模拟器)	需要先 build
+preview	先构建再用 Wrangler 预览	测试生产环境
+deploy	部署到 Cloudflare Workers 生产环境	正式发布
+check	类型检查 + 构建 + 模拟部署	CI/CD 验证
+typecheck	仅 TypeScript 类型检查	代码检查
+cf-typegen / typegen	生成 Cloudflare 类型定义	更新 Worker 类型
+lint	ESLint 代码检查	代码规范

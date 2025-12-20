@@ -1,3 +1,4 @@
+/// <reference types="./worker-configuration" />
 import { type PlatformProxy } from "wrangler";
 
 type GetLoadContextArgs = {
@@ -11,7 +12,6 @@ type GetLoadContextArgs = {
 };
 
 declare module "@remix-run/cloudflare" {
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
 	interface AppLoadContext extends ReturnType<typeof getLoadContext> {
 		// This will merge the result of `getLoadContext` into the `AppLoadContext`
 	}

@@ -2,7 +2,7 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/cloudflare";
-import { Link, useLoaderData, useOutletContext } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import {
   getAppById,
   getVersionsByStage,
@@ -57,7 +57,7 @@ export function loader({ params }: LoaderFunctionArgs): LoaderData {
 }
 
 export default function StageVersions() {
-  const { app, stage, stageInfo, versions } = useLoaderData<LoaderData>();
+  const { app, stageInfo, versions } = useLoaderData<LoaderData>();
   const isInternal = stageInfo.group === "internal";
 
   return (
