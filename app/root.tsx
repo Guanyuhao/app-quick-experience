@@ -29,6 +29,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<meta name="theme-color" content="#0f172a" />
+				{/* 安全相关 meta 标签 */}
+				<meta name="author" content="BooChat Team" />
+				<meta name="robots" content="index, follow" />
+				<meta httpEquiv="X-Content-Type-Options" content="nosniff" />
+				<meta httpEquiv="X-Frame-Options" content="SAMEORIGIN" />
+				<meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
 				<Meta />
 				<Links />
 			</head>
