@@ -27,7 +27,14 @@ export default {
 					},
 				},
 			});
-			return await handleRemixRequest(request, loadContext);
+			const response = await handleRemixRequest(request, loadContext);
+			
+			// 添加安全响应头
+			response.headers.set("X-Content-Type-Options", "nosniff");
+			response.headers.set("X-Frame-Options", "SAMEORIGIN");
+			response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+			
+			return response;
 		} catch (error) {
 			console.log(error);
 			return new Response("An unexpected error occurred", { status: 500 });
