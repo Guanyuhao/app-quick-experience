@@ -34,6 +34,14 @@ export interface GitHubConfig {
   repo: string;
 }
 
+// Gitee 仓库配置
+export interface GiteeConfig {
+  owner: string;
+  repo: string;
+}
+
+export type CDNType = "cloudflare-ipv6" | "fastly" | "edgeone" | "gitee";
+
 // App 配置
 export interface AppConfig {
   id: string;
@@ -41,6 +49,7 @@ export interface AppConfig {
   description: string;
   icon: string;
   github: GitHubConfig;
+  gitee?: GiteeConfig; // 可选，Gitee 仓库配置
   versions: {
     alpha: AppVersion[];
     beta: AppVersion[];

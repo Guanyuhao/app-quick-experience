@@ -9,12 +9,16 @@
         "owner": "Guanyuhao",
         "repo": "app-quick-experience"
       },
+      "gitee": {
+        "owner": "gchaha",
+        "repo": "app-download"
+      },
       "versions": {
         "alpha": [
           {
             "version": "1.0.0-alpha.1",
             "date": "2025-12-20",
-            "changelog": "- 使用新的后端服务",
+            "changelog": "迁移了新的后端服务",
             "android": {
               "tag": "v1.0.0.alpha",
               "asset": "boochat-alpha.1.apk"
@@ -30,10 +34,15 @@
           {
             "version": "1.0.0-beta.1",
             "date": "2025-12-20",
-            "changelog": "- Beta 服务稳定性更好",
+            "changelog": "稳定服务",
             "android": {
               "tag": "v1.0.0.beta",
               "asset": "boochat-beta.1.apk"
+            },
+            "ios": {
+              "tag": "v1.0.0.beta",
+              "asset": "boochat-beta.1.ipa",
+              "testflight": true
             }
           }
         ],
@@ -48,4 +57,3 @@
     "senderName": "BooChat 体验平台"
   }
 }
-

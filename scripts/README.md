@@ -46,6 +46,8 @@ GitHub Release 发布与清理脚本，自动管理 `apps.json` 配置与 GitHub
 
 如果只输入 `1.0.0-alpha`（不带 index），脚本会自动递增该 stage 的最大 index。
 
+> **注意**：脚本仅支持 GitHub Release。如需使用 Gitee，请手动上传文件到 Gitee Release，页面上的 Gitee 下载按钮会自动显示（如果 `apps.json` 中配置了 `gitee`）。
+
 ## 命令概览
 
 ```bash
@@ -398,4 +400,3 @@ python3 scripts/release_manager.py normalize
 # 预览（推荐）
 python3 scripts/release_manager.py <command> --dry-run
 ```
-
