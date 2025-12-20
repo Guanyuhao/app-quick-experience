@@ -38,3 +38,11 @@ pnpm run dev
 ```bash
 pnpm run deploy
 ```
+
+## 开发环境用真实邮箱
+```json
+"settings": {
+    "email": "xxx@qq.com",
+    "senderEmail": "onboarding@resend.dev",
+}
+```

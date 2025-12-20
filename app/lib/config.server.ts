@@ -77,10 +77,19 @@ export function getLatestVersionAnyStage(appId: string): {
 }
 
 /**
- * 获取邮箱地址（Cloudflare Email Routing 地址，用于收发邮件）
+ * 获取收件邮箱地址（通知邮箱，通过 Cloudflare Email Routing 转发）
  */
 export function getEmail(): string {
   return config.settings.email;
+}
+
+/**
+ * 获取发件邮箱地址
+ * 优先使用 senderEmail，如果未配置则使用 email
+ * 注意：使用自定义域名需要先在 Resend 验证
+ */
+export function getSenderEmail(): string {
+  return config.settings.senderEmail || config.settings.email;
 }
 
 /**

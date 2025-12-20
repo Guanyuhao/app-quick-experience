@@ -52,8 +52,9 @@ export interface AppConfig {
 
 // 全局设置
 export interface AppSettings {
-  email: string;        // Cloudflare Email Routing 地址，用于收发邮件
-  senderName?: string;  // 发件人显示名称
+  email: string;         // 收件邮箱（通过 Cloudflare Email Routing 转发）
+  senderEmail?: string;  // 发件邮箱（需在 Resend 验证域名，不填则使用 email）
+  senderName?: string;   // 发件人显示名称
 }
 
 // 完整配置文件结构
