@@ -58,5 +58,13 @@
 		"typegen": "wrangler types"
 	},
 	"sideEffects": false,
-	"type": "module"
+	"type": "module",
+	"pnpm": {
+		"ignoredBuiltDependencies": [
+			"esbuild",
+			"sharp",
+			"unrs-resolver",
+			"workerd"
+		]
+	}
 }
