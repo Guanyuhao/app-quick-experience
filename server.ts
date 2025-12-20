@@ -1,5 +1,5 @@
 import { createRequestHandler, type ServerBuild } from "@remix-run/cloudflare";
-// @ts-expect-error This file won't exist if it hasn't yet been built
+// @ts-ignore - This file won't exist if it hasn't yet been built
 import * as build from "./build/server";
 import { getLoadContext } from "./load-context";
 
