@@ -1,0 +1,55 @@
+{
+  "apps": [
+    {
+      "id": "boochat",
+      "name": "BooChat",
+      "description": "构建交易与陪伴的多链聚合Web3社交平台",
+      "icon": "",
+      "github": {
+        "owner": "your-org",
+        "repo": "boochat-releases"
+      },
+      "versions": {
+        "alpha": [
+          {
+            "version": "1.0.0-alpha.2",
+            "date": "2025-01-20",
+            "changelog": "- 新增群聊功能\n- 修复消息发送延迟问题\n- 优化界面流畅度",
+            "android": {
+              "tag": "v1.0.0-alpha.2",
+              "asset": "boochat-1.0.0-alpha.2.apk"
+            },
+            "ios": {
+              "tag": "v1.0.0-alpha.2",
+              "asset": "boochat-1.0.0-alpha.2.ipa",
+              "testflight": true
+            }
+          },
+          {
+            "version": "1.0.0-alpha.1",
+            "date": "2025-01-15",
+            "changelog": "- 首个内测版本\n- 基础聊天功能\n- 用户注册登录",
+            "android": {
+              "tag": "v1.0.0-alpha.1",
+              "asset": "boochat-1.0.0-alpha.1.apk"
+            },
+            "ios": {
+              "tag": "v1.0.0-alpha.1",
+              "asset": "boochat-1.0.0-alpha.1.ipa",
+              "testflight": true
+            }
+          }
+        ],
+        "beta": [],
+        "rc": [],
+        "pre": [],
+        "release": []
+      }
+    }
+  ],
+  "settings": {
+    "email": "support@chatone.info",
+    "senderName": "BooChat 体验平台"
+  }
+}
+

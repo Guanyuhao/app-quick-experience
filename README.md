@@ -1,57 +1,45 @@
-# Welcome to Remix + Cloudflare Workers!
+# App 快速体验平台
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/remix-starter-template)
+基于 Remix + Cloudflare Workers 构建的 App 分发平台。
 
-<!-- dash-content-start -->
+## 功能
 
-Build a fullstack Remix application, deployed to Cloudflare Workers.
+- 📱 多 App 管理
+- 📦 多阶段版本（内测/公测/正式）
+- 📧 iOS TestFlight 申请（MailChannels 邮件通知）
+- 🌐 Cloudflare Workers 边缘部署
 
-- 📖 [Remix docs](https://remix.run/docs)
-- 📖 [Remix Cloudflare docs](https://remix.run/guides/vite#cloudflare)
+## 快速开始
 
-<!-- dash-content-end -->
-
-## Development
-
-Run the dev server:
-
-```sh
-npm run dev
+```bash
+pnpm install
+pnpm run dev
 ```
 
-To run Wrangler:
+## 配置
 
-```sh
-npm run build
-npm start
+编辑 `app/config/apps.json`：
+
+```json
+{
+  "apps": [...],
+  "settings": {
+    "email": "support@chatone.info",
+    "senderName": "BooChat 体验平台"
+  }
+}
 ```
 
-## Typegen
+## 部署
 
-Generate types for your Cloudflare bindings in `wrangler.toml`:
-
-```sh
-npm run typegen
+```bash
+pnpm run deploy
 ```
 
-You will need to rerun typegen whenever you make changes to `wrangler.toml`.
+## SPF 配置
 
-## Deployment
+在 Cloudflare DNS 添加：
 
-If you don't already have an account, then [create a cloudflare account here](https://dash.cloudflare.com/sign-up) and after verifying your email address with Cloudflare, go to your dashboard and set up your free custom Cloudflare Workers subdomain.
-
-Once that's done, you should be able to build your app:
-
-```sh
-npm run build
 ```
-
-And deploy it:
-
-```sh
-npm run deploy
+TXT @ "v=spf1 include:_spf.mx.cloudflare.net include:relay.mailchannels.net ~all"
 ```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.

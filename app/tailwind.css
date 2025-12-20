@@ -2,11 +2,173 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
 html,
 body {
-	@apply bg-white dark:bg-gray-950;
+  @apply bg-slate-950 text-slate-100 antialiased;
+  font-family: var(--font-sans);
+}
 
-	@media (prefers-color-scheme: dark) {
-		color-scheme: dark;
-	}
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-700 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-600;
+}
+
+/* 文字溢出 */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 动画 */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s ease-out forwards;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* 玻璃态效果 */
+.glass {
+  @apply bg-slate-800/40 backdrop-blur-xl border border-slate-700/50;
+}
+
+/* 渐变边框 */
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(168, 85, 247, 0.5));
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* 悬停效果 */
+.hover-lift {
+  @apply transition-transform duration-300;
+}
+
+.hover-lift:hover {
+  @apply -translate-y-1;
+}
+
+/* 点击波纹效果 */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.5s, opacity 0.3s;
+}
+
+.ripple:active::after {
+  transform: scale(2);
+  opacity: 1;
+  transition: 0s;
+}
+
+/* 加载骨架屏 */
+.skeleton {
+  @apply bg-slate-800 animate-pulse rounded;
+}
+
+/* 版本卡片入场动画 */
+.version-card {
+  animation: fade-in 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+/* 禁止选择（适用于某些 UI 元素） */
+.select-none {
+  user-select: none;
+}
+
+/* 焦点样式 */
+input:focus,
+textarea:focus,
+button:focus {
+  @apply outline-none ring-2 ring-indigo-500/50;
+}
+
+/* 平滑滚动 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 响应式字体大小 */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }
