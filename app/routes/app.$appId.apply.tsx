@@ -7,6 +7,42 @@ import { Form, Link, useActionData, useLoaderData, useNavigation, useSearchParam
 import { getAppById, getLatestVersion, getEmail, getSenderName } from "~/lib/config.server";
 import type { AppConfig, IOSApplyFormData } from "~/lib/types";
 
+// ========== 安全工具函数 ==========
+
+/**
+ * HTML 转义 - 防止 XSS 攻击
+ */
+function escapeHtml(str: string): string {
+  const htmlEscapes: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+  };
+  return str.replace(/[&<>"']/g, (char) => htmlEscapes[char] || char);
+}
+
+/**
+ * 验证邮箱格式
+ */
+function isValidEmail(email: string): boolean {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email) && email.length <= 254;
+}
+
+/**
+ * 清理用户输入 - 移除潜在危险字符
+ */
+function sanitizeInput(str: string, maxLength: number = 1000): string {
+  return str
+    .trim()
+    .slice(0, maxLength)
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, ''); // 移除控制字符
+}
+
+// ========== 路由处理 ==========
+
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data?.app) {
     return [{ title: "App 未找到" }];
@@ -51,9 +87,20 @@ interface ActionData {
 }
 
 export async function action({ request, params, context }: ActionFunctionArgs): Promise<ActionData> {
+  // ===== CSRF 防护：验证请求来源 =====
+  const origin = request.headers.get("Origin");
+  const referer = request.headers.get("Referer");
+  const url = new URL(request.url);
+  
+  // 在生产环境中验证来源
+  if (origin && !origin.includes(url.hostname) && url.hostname !== "localhost") {
+    console.error("CSRF attempt detected:", { origin, referer, host: url.hostname });
+    return { error: "非法请求来源" };
+  }
+
   const { appId } = params;
-  if (!appId) {
-    return { error: "App ID is required" };
+  if (!appId || !/^[a-z0-9-]+$/.test(appId)) {
+    return { error: "无效的 App ID" };
   }
 
   const app = getAppById(appId);
@@ -62,32 +109,60 @@ export async function action({ request, params, context }: ActionFunctionArgs): 
   }
 
   const formData = await request.formData();
-  const appleId = formData.get("appleId") as string;
-  const reason = formData.get("reason") as string;
-  const version = formData.get("version") as string;
+  
+  // ===== Honeypot 检查 - 防止机器人 =====
+  const honeypot = formData.get("website");
+  if (honeypot) {
+    // 机器人会填写这个隐藏字段，静默拒绝
+    console.warn("Honeypot triggered - possible bot submission");
+    return { success: true, message: "申请已提交！" }; // 假装成功
+  }
 
-  // 验证必填字段
-  if (!appleId || !appleId.includes("@")) {
+  const rawAppleId = formData.get("appleId");
+  const rawReason = formData.get("reason");
+  const rawVersion = formData.get("version");
+
+  // ===== 输入验证 =====
+  if (typeof rawAppleId !== "string" || typeof rawReason !== "string") {
+    return { error: "无效的表单数据" };
+  }
+
+  const appleId = sanitizeInput(rawAppleId, 254);
+  const reason = sanitizeInput(rawReason, 1000);
+  const version = typeof rawVersion === "string" ? sanitizeInput(rawVersion, 50) : "";
+
+  // 邮箱格式验证
+  if (!isValidEmail(appleId)) {
     return { error: "请输入有效的 Apple ID 邮箱地址" };
   }
 
-  if (!reason || reason.trim().length < 10) {
+  // 理由长度验证
+  if (reason.length < 10) {
     return { error: "请输入至少 10 个字符的申请理由" };
+  }
+
+  if (reason.length > 1000) {
+    return { error: "申请理由不能超过 1000 个字符" };
   }
 
   const applyData: IOSApplyFormData = {
     appId,
     appName: app.name,
     version: version || "最新版本",
-    appleId: appleId.trim(),
-    reason: reason.trim(),
+    appleId,
+    reason,
   };
 
-  // 获取邮件配置（同一个邮箱用于收发，通过 Cloudflare Email Routing 转发）
+  // 获取邮件配置
   const email = getEmail();
   const senderName = getSenderName();
 
-  // 构建邮件内容
+  // ===== 构建邮件内容（对用户输入进行 HTML 转义防止 XSS）=====
+  const safeAppleId = escapeHtml(applyData.appleId);
+  const safeReason = escapeHtml(applyData.reason).replace(/\n/g, "<br>");
+  const safeVersion = escapeHtml(applyData.version);
+  const safeAppName = escapeHtml(applyData.appName);
+
   const emailSubject = `[${app.name}] iOS TestFlight 体验申请 - ${applyData.appleId}`;
   const emailHtml = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #f8fafc;">
@@ -100,17 +175,17 @@ export async function action({ request, params, context }: ActionFunctionArgs): 
           <table style="width: 100%; border-collapse: collapse;">
             <tr>
               <td style="padding: 10px 0; color: #64748b; width: 100px; vertical-align: top;">应用名称</td>
-              <td style="padding: 10px 0; color: #1e293b; font-weight: 600;">${applyData.appName}</td>
+              <td style="padding: 10px 0; color: #1e293b; font-weight: 600;">${safeAppName}</td>
             </tr>
             <tr>
               <td style="padding: 10px 0; color: #64748b; vertical-align: top;">申请版本</td>
-              <td style="padding: 10px 0; color: #1e293b; font-weight: 500;">${applyData.version}</td>
+              <td style="padding: 10px 0; color: #1e293b; font-weight: 500;">${safeVersion}</td>
             </tr>
             <tr>
               <td style="padding: 10px 0; color: #64748b; vertical-align: top;">Apple ID</td>
               <td style="padding: 10px 0;">
-                <a href="mailto:${applyData.appleId}" style="color: #6366f1; font-weight: 600; text-decoration: none;">
-                  ${applyData.appleId}
+                <a href="mailto:${safeAppleId}" style="color: #6366f1; font-weight: 600; text-decoration: none;">
+                  ${safeAppleId}
                 </a>
               </td>
             </tr>
@@ -122,7 +197,7 @@ export async function action({ request, params, context }: ActionFunctionArgs): 
             申请理由
           </h3>
           <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; color: #475569; line-height: 1.8;">
-            ${applyData.reason.replace(/\n/g, "<br>")}
+            ${safeReason}
           </div>
         </div>
         
@@ -148,61 +223,52 @@ ${applyData.reason}
 申请时间: ${new Date().toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" })}
   `.trim();
 
+  // 获取 Resend API Key
+  const env = context.cloudflare?.env as { RESEND_API_KEY?: string } | undefined;
+  const resendApiKey = env?.RESEND_API_KEY;
+
+  if (!resendApiKey) {
+    console.log("RESEND_API_KEY not configured, logging request:", applyData);
+    return { 
+      success: true, 
+      message: "申请已记录！我们会尽快处理您的申请。" 
+    };
+  }
+
   try {
-    // 使用 MailChannels API 发送邮件（Cloudflare Workers 免费集成）
-    const response = await fetch("https://api.mailchannels.net/tx/v1/send", {
+    // 使用 Resend API 发送邮件
+    const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
+        "Authorization": `Bearer ${resendApiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        personalizations: [
-          {
-            to: [{ email: email }],
-          },
-        ],
-        from: {
-          email: email,
-          name: senderName,
-        },
+        from: `${senderName} <${email}>`,
+        to: [email],
         subject: emailSubject,
-        content: [
-          {
-            type: "text/plain",
-            value: emailText,
-          },
-          {
-            type: "text/html",
-            value: emailHtml,
-          },
-        ],
+        html: emailHtml,
+        text: emailText,
       }),
     });
 
-    if (response.ok || response.status === 202) {
-      console.log("Email sent successfully via MailChannels");
+    if (response.ok) {
+      console.log("Email sent successfully via Resend");
       return { 
         success: true, 
         message: "申请已提交！我们会尽快将您添加到 TestFlight 测试名单中。" 
       };
     } else {
-      const errorText = await response.text();
-      console.error("MailChannels API error:", response.status, errorText);
-      
-      // 如果 MailChannels 失败，仍然记录申请（开发环境）
-      console.log("iOS TestFlight Apply Request (fallback):", applyData);
+      const errorData = await response.json();
+      console.error("Resend API error:", response.status, errorData);
       return { 
-        success: true, 
-        message: "申请已记录！我们会尽快处理您的申请。" 
+        error: "邮件发送失败，请稍后重试" 
       };
     }
   } catch (error) {
     console.error("Failed to send email:", error);
-    // 即使邮件发送失败，也记录申请信息
-    console.log("iOS TestFlight Apply Request (error fallback):", applyData);
     return { 
-      success: true, 
-      message: "申请已记录！我们会尽快处理您的申请。" 
+      error: "提交失败，请稍后重试" 
     };
   }
 }
@@ -313,6 +379,18 @@ export default function ApplyForm() {
               </div>
             </div>
 
+            {/* Honeypot 字段 - 防机器人，对用户不可见 */}
+            <div className="absolute -left-[9999px]" aria-hidden="true">
+              <label htmlFor="website">Website</label>
+              <input
+                type="text"
+                id="website"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+
             {/* Apple ID 输入 */}
             <div>
               <label
@@ -326,7 +404,9 @@ export default function ApplyForm() {
                 id="appleId"
                 name="appleId"
                 required
+                maxLength={254}
                 placeholder="example@icloud.com"
+                autoComplete="email"
                 className="w-full rounded-xl bg-slate-800/50 border border-slate-700/50 px-4 py-3 text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all"
               />
               <p className="mt-2 text-xs text-slate-500">
@@ -348,11 +428,12 @@ export default function ApplyForm() {
                 required
                 rows={4}
                 minLength={10}
+                maxLength={1000}
                 placeholder="请简单描述您希望体验此 App 的原因..."
                 className="w-full rounded-xl bg-slate-800/50 border border-slate-700/50 px-4 py-3 text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all resize-none"
               />
               <p className="mt-2 text-xs text-slate-500">
-                请输入至少 10 个字符
+                请输入 10-1000 个字符
               </p>
             </div>
 
