@@ -40,6 +40,13 @@ export function loader(): LoaderData {
   };
 }
 
+export function headers() {
+  // 设置缓存头，优化性能
+  return {
+    "Cache-Control": "public, max-age=60, s-maxage=300",
+  };
+}
+
 export default function Index() {
   const { apps } = useLoaderData<LoaderData>();
 

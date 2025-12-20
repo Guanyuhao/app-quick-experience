@@ -139,6 +139,7 @@ export default function AppDetailIndex() {
                           <Link
                             key={stage}
                             to={`/app/${app.id}/${stage}`}
+                            prefetch="intent"
                             className={`group relative overflow-hidden rounded-xl border p-5 transition-all duration-300 ${
                               isActive
                                 ? "bg-gradient-to-br from-slate-800/80 to-slate-900/80 border-slate-700/50 hover:border-slate-600/50 hover:scale-[1.02]"

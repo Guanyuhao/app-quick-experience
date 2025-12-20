@@ -16,6 +16,7 @@ export function AppCard({ app, latestVersion }: AppCardProps) {
   return (
     <Link
       to={`/app/${app.id}`}
+      prefetch="intent"
       className="group relative block overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl border border-slate-700/50 p-6 transition-all duration-300 hover:scale-[1.02] hover:border-slate-600/50 hover:shadow-2xl hover:shadow-indigo-500/10"
     >
       {/* 背景光效 */}

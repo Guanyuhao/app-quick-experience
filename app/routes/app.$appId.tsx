@@ -7,7 +7,7 @@ interface LoaderData {
   app: AppConfig;
 }
 
-export function loader({ params }: LoaderFunctionArgs): LoaderData {
+export function loader({ params, request }: LoaderFunctionArgs): LoaderData {
   const { appId } = params;
   if (!appId) {
     throw new Response("App ID is required", { status: 400 });
@@ -19,6 +19,13 @@ export function loader({ params }: LoaderFunctionArgs): LoaderData {
   }
 
   return { app };
+}
+
+export function headers() {
+  // 设置缓存头，优化性能
+  return {
+    "Cache-Control": "public, max-age=60, s-maxage=300",
+  };
 }
 
 export default function AppLayout() {
@@ -40,6 +47,7 @@ export default function AppLayout() {
               <Link
                 to="/"
                 className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
+                prefetch="intent"
               >
                 <svg
                   className="h-5 w-5"
@@ -54,7 +62,7 @@ export default function AppLayout() {
                     d="M15 19l-7-7 7-7"
                   />
                 </svg>
-                <span>返回列表</span>
+                <span>上一级</span>
               </Link>
             </div>
           </div>
