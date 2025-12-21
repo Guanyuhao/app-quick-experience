@@ -26,7 +26,7 @@ pnpm run dev
 
 1. 注册 [Resend](https://resend.com)（免费 3000 封/月）
 2. 创建 API Key
-3. 添加并验证域名 `chatone.info`
+3. 添加并验证域名 `xxx`
 4. 本地开发：创建 `.dev.vars`
    ```
    RESEND_API_KEY=re_xxxxxxxx
