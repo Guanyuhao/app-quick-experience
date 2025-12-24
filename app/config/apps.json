@@ -32,12 +32,13 @@
         ],
         "beta": [
           {
-            "version": "1.0.0-beta.1",
-            "date": "2025-12-20",
-            "changelog": "稳定服务",
+            "version": "1.0.0-beta.2",
+            "date": "2025-12-24",
+            "changelog": "资产对接，支持U点，支持BSC查询",
             "android": {
               "tag": "v1.0.0.beta",
-              "asset": "boochat-beta.1.apk"
+              "asset": "boochat-beta.2.apk",
+              "cdnUrl": "https://s3.lucasweb.dpdns.org/app/bootchat/release/boochat-beta.2.apk"
             },
             "ios": {
               "tag": "v1.0.0.beta",
@@ -45,6 +46,7 @@
               "testflight": true
             }
           }
+          
         ],
         "rc": [],
         "pre": [],

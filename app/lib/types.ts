@@ -12,6 +12,7 @@ export type StageGroup = "internal" | "public" | "release";
 export interface PlatformAsset {
   tag: string; // GitHub Release tag
   asset: string; // 文件名
+  cdnUrl?: string;
 }
 
 // iOS 平台资源（额外包含 TestFlight 标记）

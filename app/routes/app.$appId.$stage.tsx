@@ -204,7 +204,14 @@ export default function StageVersions() {
                         }
                       />
                     )}
-
+                    {/* {国内加速下载} */}
+                    {version?.android?.cdnUrl &&(
+                      <DownloadButton
+                        downloadUrl={version?.android?.cdnUrl}
+                        btnText="香港加速Apk"
+                        variant="emerald"
+                      />
+                    )}
                     {/* iOS 下载/申请 */}
                     {version.ios && (
                       <>
