@@ -16,6 +16,15 @@
       "versions": {
         "alpha": [
           {
+            "version": "1.1.0-alpha.2",
+            "date": "2025-12-25",
+            "changelog": "后续资产模块调试移接\n开启了BSCTest在Build版本中",
+            "android": {
+              "tag": "v1.1.0.alpha",
+              "asset": "boochat-alpha.2.apk"
+            }
+          },
+          {
             "version": "1.0.0-alpha.1",
             "date": "2025-12-20",
             "changelog": "迁移了新的后端服务",
@@ -42,11 +51,10 @@
             },
             "ios": {
               "tag": "v1.0.0.beta",
-              "asset": "boochat-beta.1.ipa",
+              "asset": "boochat-beta.2.ipa",
               "testflight": true
             }
           }
-          
         ],
         "rc": [],
         "pre": [],
