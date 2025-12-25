@@ -21,7 +21,9 @@
             "changelog": "后续资产模块调试移接\n开启了BSCTest在Build版本中",
             "android": {
               "tag": "v1.1.0.alpha",
-              "asset": "boochat-alpha.2.apk"
+              "asset": "boochat-alpha.2.apk",
+              "cdnUrl": "https://s3.lucasweb.dpdns.org/app/bootchat/release/boochat-alpha.2.apk"
+
             }
           },
           {
