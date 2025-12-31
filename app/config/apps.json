@@ -18,7 +18,7 @@
           {
             "version": "1.1.0-alpha.10",
             "date": "2025-12-31",
-            "changelog": "游戏打开画面尺寸问题\n 换回原来的了问题\n广场还不能发帖子",
+            "changelog": "Im 换回原来的了问题\n表情包更换\n 拉了一个朋友对话，看不到消息对话\n安卓打开 app 是可以看到时间和网络的,iOS 没有",
             "android": {
               "tag": "v1.1.0.alpha",
               "asset": "boochat-alpha.10.apk"
