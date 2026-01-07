@@ -16,6 +16,16 @@
       "versions": {
         "alpha": [
           {
+            "version": "1.1.0-alpha.11",
+            "date": "2026-01-07",
+            "changelog": "修复\n注册流程：去掉备份助记词页面，设置头像和昵称页面。 提示钱包创建成功后，绑定邀请码，即可进入主页\n未区分邀请群跟开放群\n群设置无效，设置头像没实时更新，（群设置头像，跟设置名称保存后，在群设置页面没有回显成功）\n群主没有解散群功能，\n没有修改群名称功能 \n邀请码页面显示邀请码，二维码链接后台配置Url\n白皮书链接\n\n完善广场功能",
+            "android": {
+              "tag": "v1.1.0.alpha",
+              "asset": "boochat-alpha.11.apk",
+              "cdnUrl": "https://s3.lucasweb.dpdns.org/app/bootchat/release/boochat-alpha.11.apk"
+            }
+          },
+          {
             "version": "1.1.0-alpha.10",
             "date": "2026-01-03",
             "changelog": "改bug\n加了广场\n朋友圈\n朋友圈还没有完善",
@@ -30,8 +40,7 @@
             "changelog": "后续资产模块调试移接\n开启了BSCTest在Build版本中",
             "android": {
               "tag": "v1.1.0.alpha",
-              "asset": "boochat-alpha.9.apk",
-              "cdnUrl": "https://s3.lucasweb.dpdns.org/app/bootchat/release/boochat-alpha.9.apk"
+              "asset": "boochat-alpha.9.apk"
             }
           }
         ],
